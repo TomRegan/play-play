@@ -11,7 +11,7 @@ class Application extends Controller {
 
 
   def books = Action {
-    val filePath: String = "/Users/tom/Books"
+    val filePath: String = "/Users/tomr/Books"
     Ok(views.html.books(filePath))
   }
 

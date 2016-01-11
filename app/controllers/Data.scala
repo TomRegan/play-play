@@ -12,7 +12,7 @@ import play.api.libs.json.{Json, JsObject, JsValue}
 class Data extends Controller {
 
   def books = Action {
-    val filePath: String = "/Users/tom/Books"
+    val filePath: String = "/Users/tomr/Books"
     val books: Seq[String] = files(new java.io.File(filePath)).map(_.getPath)
     val data: JsValue = JsObject(Seq(
       "data" -> Json.toJson(books),
