@@ -1,57 +1,62 @@
 var Book = React.createClass({
-    render: function() {
-        
+    render: function () {
+        return <li key={this.props.title}>{this.props.title}</li>
     }
 });
 
 var BookList = React.createClass({
-    render: function() {
-        var bookList = this.props.data.map(function(book) {
-            return (<Book title={book} />)
-        });
-        return (<div>{bookList}</div>);
+    render: function () {
+        var filter = this.props.filter.toLowerCase();
+        return (<ul>{this.props.data
+            .map(function (book) {
+                return <Book key={book} title={book}/>
+            }).filter(function (book) {
+                var title = book.props.title.toLowerCase();
+                return title.indexOf(filter) != -1;
+            })}</ul>);
     }
 });
 
 var SearchResult = React.createClass({
-    getInitialState: function() {
+    getInitialState: function () {
         return {data: []};
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         $.ajax({
             url: this.props.url,
             dataType: 'json',
             cache: false,
-            success: function(data) {
+            success: function (data) {
                 // todo error-p
                 this.setState({data: data.data});
             }.bind(this),
-            error: function(xhr, status, err) {
+            error: function (xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
             }.bind(this)
         });
     },
-    render: function() {
-        return (<BookList data={this.state.data} />)
+    render: function () {
+        return <BookList data={this.state.data} filter={this.props.filter}/>
     }
 });
 
 var SearchInput = React.createClass({
-    handleOnChange: function() {
-        var q = this.query.value;
-        console.log(q)
+    getInitialState: function () {
+        return {filter: ""};
     },
-    render: function() {
+    handleOnChange: function () {
+        this.setState({filter: this.query.value})
+    },
+    render: function () {
         return (<div id="books">
-                    <input
-                        type="text"
-                        placeholder="search"
-                        onChange={this.handleOnChange}
-                        ref={(x) => this.query = x}
-                    />
-                    <SearchResult url="/api/1/books">
-                    </SearchResult>
-                </div>
+                <input
+                    type="text"
+                    placeholder="search"
+                    onChange={this.handleOnChange}
+                    ref={(x) => this.query = x}
+                />
+                <SearchResult url="/api/1/books" filter={this.state.filter} />
+            </div>
         );
     }
 });

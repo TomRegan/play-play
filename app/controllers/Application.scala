@@ -11,7 +11,8 @@ class Application extends Controller {
 
 
   def books = Action {
-    val filePath: String = "/Users/tomr/Books"
+    val homePath: String = System.getenv("HOME")
+    val filePath: String = s"$homePath/Books"
     Ok(views.html.books(filePath))
   }
 
