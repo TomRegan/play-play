@@ -6,14 +6,14 @@ var Book = React.createClass({
 
 var BookList = React.createClass({
     render: function () {
-        var filter = this.props.filter.toLowerCase();
         return (<ul>{this.props.data
             .map(function (book) {
                 return <Book key={book} title={book}/>
             }).filter(function (book) {
                 var title = book.props.title.toLowerCase();
+                var filter = this.props.filter.toLowerCase();
                 return title.indexOf(filter) != -1;
-            })}</ul>);
+            }.bind(this))}</ul>);
     }
 });
 
@@ -26,9 +26,9 @@ var SearchResult = React.createClass({
             url: this.props.url,
             dataType: 'json',
             cache: false,
-            success: function (data) {
+            success: function (response) {
                 // todo error-p
-                this.setState({data: data.data});
+                this.setState({data: response.data});
             }.bind(this),
             error: function (xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
